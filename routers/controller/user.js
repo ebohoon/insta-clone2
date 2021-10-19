@@ -1,4 +1,4 @@
-const Users = require('../../schema/user');
+const Users = require('../../schema/users');
 const bcrypt = require('bcrypt');
 const Joi = require('joi');
 const jwt = require('jsonwebtoken');
@@ -77,13 +77,13 @@ CheckDuplicatedID = async (req, res, next) => {
   }
 };
 
-//Nickname 중복확인 체크
+//Nickname 중복확인 체크  //조이관련 정규식 표현 다듬기
 CheckDuplicatedNickname = async (req, res, next) => {
   try {
     const NicknameSchema = Joi.object({
       nickname: Joi.string()
         .min(3)
-        .pattern(/^[a-z0-9]{3,10}/)
+        .pattern(/^[a-z0-9]{3,10}/) //여기는 수정해야함 아직 계속 오류남
         .required(),
     });
     const { nickname } = await NicknameSchema.validateAsync(req.body);
@@ -104,10 +104,11 @@ CheckDuplicatedNickname = async (req, res, next) => {
 GetLoginPage = (req, res, next) => {
   try {
     if (res.locals.user) {
-      console.log(res.locals.user);
+      // console.log(res.locals.user);
       res.send({ result: 'success', msg: 'success' });
     }
   } catch (err) {
+    res.send({ result: 'fail', msg: 'fail' });
     printError(req, err);
     next();
   }
@@ -123,12 +124,12 @@ TryLogin = async (req, res, next) => {
       if (await bcrypt.compare(password, user.password)) {
         //로그인 성공시 토큰 생성
         const token = jwt.sign(
-          { userId: user.userId },
+          { userId: user.userId, nickname: user.nickname },
           process.env.SECRET_KEY,
           { expiresIn: '5d' }
         );
         console.log(`발급된 토큰: ${token}\n 로그인 성공`);
-        res.send({ result: 'success', msg: 'success', token: token });
+        res.send({ result: 'success', info: user, token: token });
       } else {
         res.send({ result: 'fail', msg: '아이디 또는 비밀번호가 틀렸습니다.' });
       }

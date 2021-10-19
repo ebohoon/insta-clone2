@@ -1,33 +1,56 @@
-// const postings = require("../../schema/posting");
-// const multer = require("multer");
-// const path = require("path");
+// const Joi = require('joi');
+const Users = require('../../schema/users');
+const Postings = require('../../schema/postings');
+const printError = require('../../library/error');
 
-// module.exports = {
-//   mainView: async (req, res, next) => {
+GetMainPosting = async (req, res, next) => {
+  try {
+    const date = request.query.date;
+    // 로그인한 유저가 쓴 다이어리만 가져오게 필터링
+    const getPostings = await Postings.find();
+    res.json(getPostings);
+  } catch (err) {
+    printError(req, err);
+    next();
+  }
+};
 
-//   },
-//   boardPost: async (req, res, next) => {
-// //이미지 파일 업로드
-//     var storage = multer.diskStorage({
-//         destination: function (req, file, cb) {
-//           cb(null, "public/images/");
-//         },
-//         filename: function (req, file, cb) {
-//           const ext = path.extname(file.originalname);
-//           cb(null, path.basename(file.originalname, ext) + "-" + Date.now() + ext);
-//         },
-//       });
-      
-//       var upload = multer({ storage: storage });
+CreatePosting = async (req, res, next) => {
+  try {
+    console.log('트라이들어옴');
+    // Joi 검증 필요한지 확인하자??
+    //ID로 찾아서 nickname을 가져올 지 아니면
+    const userId = res.locals.user; //유저정보가져오기위한 수단 날짜생성
+    console.log(userId);
+    const Finduser = await Users.findOne({ userId: userId });
+    console.log(Finduser.nickname); //작성자 닉네임 가져오기
 
-//     try {
-//       const { nickname, text, createdAt, image, like, comment } = req.body;
-//       await postings.create({ nickname, text, createdAt, image, like, comment });
-//       res.send({ result: "success" });
-//       return;
-//     } catch (err) {
-//       console.error(err);
-//       res.status(400).send({ result: "fail" });
-//     }
-//   },
-// };
+    const { text, image, createdAt } = req.body;
+    await Postings.create({ nickname, text, image, comment, like });
+    res.send({ result: 'success', msg: '게시글 작성에 성공했습니다.' });
+  } catch (err) {
+    res.send({ result: 'fail', msg: '게시글 작성에 실패했습니다.' });
+
+    printError(req, err);
+    next();
+  }
+};
+
+// 특정 다이어리 불러오기
+GetDetailPosting = async (req, res, next) => {
+  try {
+    const diaryData = await Diaries.find({
+      userID: res.locals.user,
+      date: req.query.date,
+    });
+    res.json(diaryData);
+  } catch (err) {
+    printError(req, err);
+    next(err);
+  }
+};
+
+module.exports = {
+  GetMainPosting,
+  CreatePosting,
+};
