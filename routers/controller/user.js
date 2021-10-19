@@ -57,7 +57,13 @@ SignupUser = async (req, res, next) => {
 //ID 중복확인 체크
 CheckDuplicatedID = async (req, res, next) => {
   try {
-    const { userId } = req.body;
+    const IdSchema = Joi.object({
+      userId: Joi.string()
+        .min(3)
+        .pattern(/^[a-z0-9]{3,10}/)
+        .required(),
+    });
+    const { userId } = await IdSchema.validateAsync(req.body);
     const existUsers = await Users.findOne({ userId });
     if (existUsers) {
       res.send({ result: 'fail', msg: '이미 존재하는 아이디입니다.' });
@@ -65,6 +71,7 @@ CheckDuplicatedID = async (req, res, next) => {
       res.send({ result: 'success', msg: '사용 가능한 아이디입니다' });
     }
   } catch (err) {
+    res.send({ result: 'fail', msg: '형식에 맞지 않는 아이디입니다.' });
     printError(req, err);
     next();
   }
@@ -73,6 +80,13 @@ CheckDuplicatedID = async (req, res, next) => {
 //Nickname 중복확인 체크
 CheckDuplicatedNickname = async (req, res, next) => {
   try {
+    const NicknameSchema = Joi.object({
+      nickname: Joi.string()
+        .min(3)
+        .pattern(/^[a-z0-9]{3,10}/)
+        .required(),
+    });
+    const { nickname } = await NicknameSchema.validateAsync(req.body);
     const { nickname } = req.body;
     const existNickname = await Users.findOne({ nickname });
     if (existNickname) {
@@ -81,6 +95,7 @@ CheckDuplicatedNickname = async (req, res, next) => {
       res.send({ result: 'success', msg: '사용 가능한 닉네임입니다' });
     }
   } catch (err) {
+    res.send({ result: 'fail', msg: '형식에 맞지 않는 닉네임입니다.' });
     printError(req, err);
     next();
   }
