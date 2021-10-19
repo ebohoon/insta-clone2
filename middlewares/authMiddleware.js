@@ -8,7 +8,6 @@ module.exports = async (req, res, next) => {
       const { userId } = jwt.verify(token, process.env.SECRET_KEY);
       const userFind = await Users.findOne({ userId: userId });
       res.locals.user = userFind.userId;
-      // res.locals.nickname = userFind.userId;
       next();
     } else {
       //토큰이 없는 경우 튕겨나가게 하기 위해
