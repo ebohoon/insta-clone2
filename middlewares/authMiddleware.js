@@ -7,7 +7,7 @@ module.exports = async (req, res, next) => {
     if (token) {
       const { userID } = jwt.verify(token, process.env.SECRET_KEY);
       const userFind = await Users.findOne({ userID: userID });
-      res.locals.user = userFind.userID;
+      res.locals.user = userFind
       next();
     } else {
       //토큰이 없는 경우 튕겨나가게 하기 위해

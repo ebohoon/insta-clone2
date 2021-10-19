@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const userRouter = require('./routers/user');
+const postingsRouter = require('./routers/main')
 const cors = require('cors');
 const connect = require('./schema');
 connect();
@@ -12,5 +13,6 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 // app.use('/', mainPageRouter);
 app.use('/user', userRouter);
+app.use('/main', posingsRouter);
 
 module.exports = app;
