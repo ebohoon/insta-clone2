@@ -28,7 +28,7 @@ router
   .route('/auth')
   // //로그인 페이지 렌더링
   // .get(authUser, GetLoginPage)
-  .get ()
+  .get()
   //로그인 이벤트
   .post(TryLogin);
 
