@@ -1,4 +1,4 @@
-const Users = require('../../schema/user');
+const Users = require('../../schema/users');
 const bcrypt = require('bcrypt');
 const Joi = require('joi');
 const jwt = require('jsonwebtoken');
@@ -77,17 +77,16 @@ CheckDuplicatedID = async (req, res, next) => {
   }
 };
 
-//Nickname 중복확인 체크
+//Nickname 중복확인 체크  //조이관련 정규식 표현 다듬기
 CheckDuplicatedNickname = async (req, res, next) => {
   try {
     const NicknameSchema = Joi.object({
       nickname: Joi.string()
         .min(3)
-        .pattern(/^[a-z0-9]{3,10}/)
+        .pattern(/^[a-z0-9]{3,10}/) //여기는 수정해야함 아직 계속 오류남
         .required(),
     });
     const { nickname } = await NicknameSchema.validateAsync(req.body);
-    const { nickname } = req.body;
     const existNickname = await Users.findOne({ nickname });
     if (existNickname) {
       res.send({ result: 'fail', msg: '이미 존재하는 닉네임입니다.' });
@@ -109,6 +108,7 @@ GetLoginPage = (req, res, next) => {
       res.send({ result: 'success', msg: 'success' });
     }
   } catch (err) {
+    res.send({ result: 'fail', msg: 'fail' });
     printError(req, err);
     next();
   }
