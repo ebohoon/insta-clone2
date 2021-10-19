@@ -87,7 +87,6 @@ CheckDuplicatedNickname = async (req, res, next) => {
         .required(),
     });
     const { nickname } = await NicknameSchema.validateAsync(req.body);
-    const { nickname } = req.body;
     const existNickname = await Users.findOne({ nickname });
     if (existNickname) {
       res.send({ result: 'fail', msg: '이미 존재하는 닉네임입니다.' });
