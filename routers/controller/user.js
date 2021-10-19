@@ -104,7 +104,7 @@ CheckDuplicatedNickname = async (req, res, next) => {
 GetLoginPage = (req, res, next) => {
   try {
     if (res.locals.user) {
-      console.log(res.locals.user);
+      // console.log(res.locals.user);
       res.send({ result: 'success', msg: 'success' });
     }
   } catch (err) {
@@ -124,12 +124,12 @@ TryLogin = async (req, res, next) => {
       if (await bcrypt.compare(password, user.password)) {
         //로그인 성공시 토큰 생성
         const token = jwt.sign(
-          { userId: user.userId },
+          { userId: user.userId, nickname: user.nickname },
           process.env.SECRET_KEY,
           { expiresIn: '5d' }
         );
         console.log(`발급된 토큰: ${token}\n 로그인 성공`);
-        res.send({ result: 'success', msg: 'success', token: token });
+        res.send({ result: 'success', info: user, token: token });
       } else {
         res.send({ result: 'fail', msg: '아이디 또는 비밀번호가 틀렸습니다.' });
       }
