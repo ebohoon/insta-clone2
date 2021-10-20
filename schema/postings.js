@@ -16,9 +16,7 @@ const PostingsSchema = new Schema(
       type: String,
       required: true,
     },
-    image: {
-      type: String,
-    },
+
     comment: {
       type: String,
       default: "",

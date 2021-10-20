@@ -21,9 +21,9 @@ CreatePosting = async (req, res, next) => {
     const Finduser = await Users.findOne({ userId: userId })
     const nickname = Finduser.nickname //작성자 닉네임 가져오기
 
-    const { text, image, createdAt } = req.body
-    console.log(text, image)
-    await Postings.create({ nickname, text, image, createdAt })
+    const { text, createdAt } = req.body
+
+    await Postings.create({ nickname, text, createdAt })
     res.send({ result: "success", msg: "게시글 작성에 성공했습니다." })
   } catch (err) {
     res.send({ result: "fail", msg: "게시글 작성에 실패했습니다." })
