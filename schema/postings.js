@@ -18,6 +18,7 @@ const PostingsSchema = new Schema(
     },
     image: {
       type: String,
+      required: true,
     },
     comment: {
       type: String,
@@ -28,12 +29,8 @@ const PostingsSchema = new Schema(
       default: "",
     },
   },
-  {
-    versionKey: false,
-  }
 )
-
-PostingsSchema.virtual("postingId").get(function () {
+PostingsSchema.virtual("postId").get(function () {
   return this._id.toHexString()
 })
 
