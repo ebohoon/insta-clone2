@@ -16,10 +16,10 @@ module.exports = (req, res, next) => {
     if (err) {
       return res.json({ success: false, err })
     }
-      let image = res.req.file.path
-      let fileName = res.req.file.filename
-      res.locals.image = image
-      res.locals.fileName = fileName
-      next()
+    let image = res.req.file.path
+    let fileName = res.req.file.filename
+    res.locals.image = image
+    res.locals.fileName = fileName
+    next()
   })
 }

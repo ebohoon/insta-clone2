@@ -1,7 +1,11 @@
 const express = require('express');
 const app = express();
 const userRouter = require('./routers/user');
+<<<<<<< HEAD
+const postingsRouter = require('./routers/main')
+=======
 const mainRouter = require('./routers/main');
+>>>>>>> 2daf4c5eb694f787275b07a55639c622fa8f8dad
 const cors = require('cors');
 const connect = require('./schema');
 connect();
@@ -14,6 +18,10 @@ app.use(express.json());
 app.use(express.static('upload'));
 
 app.use('/user', userRouter);
+<<<<<<< HEAD
+app.use('/main', posingsRouter);
+=======
 app.use('/main', mainRouter);
+>>>>>>> 2daf4c5eb694f787275b07a55639c622fa8f8dad
 
 module.exports = app;

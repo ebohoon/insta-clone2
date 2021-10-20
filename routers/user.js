@@ -28,7 +28,10 @@ router
   .route('/auth')
   // //로그인 페이지 렌더링
   .get(authUser, GetLoginPage)
+<<<<<<< HEAD
+=======
   // .get()
+>>>>>>> 2daf4c5eb694f787275b07a55639c622fa8f8dad
   //로그인 이벤트
   .post(TryLogin);
 
