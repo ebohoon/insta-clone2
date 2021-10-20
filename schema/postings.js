@@ -1,5 +1,5 @@
-const mongoose = require('mongoose');
-const { Schema } = mongoose;
+const mongoose = require("mongoose")
+const { Schema } = mongoose
 
 const PostingsSchema = new Schema(
   {
@@ -21,20 +21,22 @@ const PostingsSchema = new Schema(
     },
     comment: {
       type: String,
+      default: "",
     },
     like: {
       type: String,
+      default: "",
     },
   },
   {
     versionKey: false,
   }
-);
+)
 
-PostingsSchema.virtual('postingId').get(function () {
-  return this._id.toHexString();
-});
+PostingsSchema.virtual("postingId").get(function () {
+  return this._id.toHexString()
+})
 
-PostingsSchema.set('toJSON', { virtuals: true });
+PostingsSchema.set("toJSON", { virtuals: true })
 
-module.exports = mongoose.model('Postings', PostingsSchema);
+module.exports = mongoose.model("Postings", PostingsSchema)
