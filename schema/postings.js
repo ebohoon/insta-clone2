@@ -1,37 +1,34 @@
 const mongoose = require("mongoose")
 const { Schema } = mongoose
 
-const PostingsSchema = new Schema(
-  {
-    nickname: {
-      type: String,
-      required: true,
-    },
-    text: {
-      //빈문자열 허용하기
-      type: String,
-      required: true,
-    },
-    createdAt: {
-      type: String,
-      required: true,
-    },
-
-    comment: {
-      type: String,
-      default: "",
-    },
-    like: {
-      type: String,
-      default: "",
-    },
+const PostingsSchema = new Schema({
+  nickname: {
+    type: String,
+    required: true,
   },
-  {
-    versionKey: false,
-  }
-)
-
-PostingsSchema.virtual("postingId").get(function () {
+  text: {
+    //빈문자열 허용하기
+    type: String,
+    required: true,
+  },
+  createdAt: {
+    type: String,
+    required: true,
+  },
+  image: {
+    type: String,
+    required: true,
+  },
+  comment: {
+    type: String,
+    default: "",
+  },
+  like: {
+    type: String,
+    default: "",
+  },
+})
+PostingsSchema.virtual("postId").get(function () {
   return this._id.toHexString()
 })
 

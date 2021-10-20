@@ -4,10 +4,11 @@ const printError = require("../../library/error")
 
 GetMainPosting = async (req, res, next) => {
   try {
-    // 로그인한 유저가 쓴 다이어리만 가져오게 필터링
-    const getPostings = await Postings.find()
+    const getPostings = await Postings.find().sort("-createdAt")
+    console.log(getPostings)
     res.json(getPostings)
   } catch (err) {
+    console.log("캐치 에러")
     printError(req, err)
     next()
   }
@@ -15,19 +16,15 @@ GetMainPosting = async (req, res, next) => {
 
 CreatePosting = async (req, res, next) => {
   try {
-    //ID로 찾아서 nickname을 가져올 지 아니면
     const userId = res.locals.user //유저정보가져오기위한 수단 날짜생성
-    console.log(userId)
     const Finduser = await Users.findOne({ userId: userId })
     const nickname = Finduser.nickname //작성자 닉네임 가져오기
-
     const { text, createdAt } = req.body
-
-    await Postings.create({ nickname, text, createdAt })
+    const image = `http://3.34.139.137/${res.locals.fileName}`
+    await Postings.create({ nickname, text, createdAt, image })
     res.send({ result: "success", msg: "게시글 작성에 성공했습니다." })
   } catch (err) {
     res.send({ result: "fail", msg: "게시글 작성에 실패했습니다." })
-
     printError(req, err)
     next()
   }
