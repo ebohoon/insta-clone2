@@ -91,9 +91,11 @@ CheckDuplicatedNickname = async (req, res, next) => {
 //로그인 페이지 허용, 로그인한 유저는 튕겨져 나감
 GetLoginPage = (req, res, next) => {
   try {
+    const { userId, nickname } = res.locals.user
+    console.log(userId,nickname)
     if (res.locals.user) {
       // console.log(res.locals.user);
-      res.send({ result: "success", msg: "success" })
+      res.json({ userId, nickname});
     }
   } catch (err) {
     res.send({ result: "fail", msg: "fail" })
@@ -114,6 +116,7 @@ TryLogin = async (req, res, next) => {
         const token = jwt.sign(
           { userId: user.userId, nickname: user.nickname },
           process.env.SECRET_KEY,
+          //만료기간 5일
           { expiresIn: "5d" }
         )
         console.log(`발급된 토큰: ${token}\n 로그인 성공`)

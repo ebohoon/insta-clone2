@@ -30,10 +30,10 @@ const PostingsSchema = new Schema(
     },
   },
 )
-PostingsSchema.virtual("postId").get(function () {
-  return this._id.toHexString()
-})
+// PostingsSchema.virtual("postId").get(function () {
+//   return this._id.toHexString()
+// })
 
-PostingsSchema.set("toJSON", { virtuals: true })
+// PostingsSchema.set("toJSON", { virtuals: true })
 
 module.exports = mongoose.model("Postings", PostingsSchema)
