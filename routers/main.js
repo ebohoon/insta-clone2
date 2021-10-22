@@ -31,5 +31,5 @@ router
 router
   //좋아요
   .route('/like/:postId')
-  .post(authUser, ClickedLike);
+  .put(authUser, ClickedLike);
 module.exports = router;
