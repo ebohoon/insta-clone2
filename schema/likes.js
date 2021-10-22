@@ -9,6 +9,9 @@ const likesSchema = new Schema({
   postId: {
     type: String,
     required: true,
+    // type: mongoose.Schema.Types.ObjectId,
+    // ref: Postings
+    // required: true,
   },
   countNum: {
     type: Number,

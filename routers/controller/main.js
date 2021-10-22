@@ -11,7 +11,8 @@ GetMainPosting = async (req, res, next) => {
     // console.log(getPostings);
     const getPostings = await Postings.find()
       .sort("-createdAt")
-      .populate("Likes")
+      // .populate("Like")
+      .populate("Commentss")
       .exec((err, data) => {
         console.log(data);
       });
@@ -31,14 +32,36 @@ CreatePosting = async (req, res, next) => {
     const nickname = Finduser.nickname; //작성자 닉네임 가져오기
     const { text, createdAt } = req.body;
     const image = `http://3.34.139.137/${res.locals.fileName}`;
-    await Postings.create({ nickname, text, createdAt, image, Like });
+    // const like = await Likes.create({ nickname, text, createdAt, image});
+    // const comment = await Comments.create({ nickname, text, createdAt, image});
+    const posting = await Postings.create({ nickname, text, createdAt, image});
     // await Likes.Create({
     //   postId: postId,
     //   nickname: nickname,
     // });
-    res.send({ result: "success", msg: "게시글 작성에 성공했습니다." });
+    res.json({ result: "success", posting });
   } catch (err) {
     res.send({ result: "fail", msg: "게시글 작성에 실패했습니다." });
+    printError(req, err);
+    next();
+  }
+};
+//댓글 등록
+CreateComment = async (req, res, next) => {
+  try {
+    const nickname = res.locals.user.nickname;
+    const { postId } = req.params;
+    const { text, createdAt } = req.body;
+    const comment = await Comments.create({
+      nickname,
+      postId,
+      text,
+      createdAt,
+    });
+    // console.log(comment)
+    res.send({ result: "success", comment });
+  } catch (err) {
+    res.send({ result: "fail" });
     printError(req, err);
     next();
   }
@@ -59,27 +82,6 @@ GetDetailPosting = async (req, res, next) => {
   }
 };
 
-//댓글 등록
-CreateComment = async (req, res, next) => {
-  try {
-    const nickname = res.locals.user.nickname;
-    const { postId } = req.params;
-    const { text, createdAt } = req.body;
-    const comment = await comments.create({
-      nickname,
-      postId,
-      text,
-      createdAt,
-    });
-    // console.log(comment)
-    res.send({ result: "success", comment });
-  } catch (err) {
-    res.send({ result: "fail" });
-    printError(req, err);
-    next();
-  }
-};
-
 //댓글 불러오기
 GetComment = async (req, res, next) => {
   try {
@@ -94,32 +96,42 @@ GetComment = async (req, res, next) => {
   }
 };
 
+//Like db 생성
 CreateLike = async (req, res, next) => {
   const { postId } = req.params;
   const nickname = res.locals.user.nickname;
   const { currentLike } = req.body;
   //닉네임 존재여부 판단 후 좋아요 스키마 생성하기
-  if (currentLike === true) {
-    const likes = await Likes.Create({
-      nickname,
-      postId,
-      countNum: countNum + 1,
-      createdAt,
-      checkLike: currentLike,
-    });
-  } else {
-    const likes = await Likes.Create({
-      nickname,
-      postId,
-      countNum: countNum + 1,
-      createdAt,
-      checkLike: currentLike,
-    });
+
+  try {
+    if (currentLike === true) {
+      const likes = await Likes.Create({
+        nickname,
+        postId,
+        countNum: countNum + 1,
+        createdAt,
+        checkLike: currentLike,
+      });
+      res.json(likes);
+    } else {
+      const likes = await Likes.Create({
+        nickname,
+        postId,
+        countNum: countNum,
+        createdAt,
+        checkLike: currentLike,
+      });
+      res.json(likes);
+    }
+  } catch (err) {
+    res.send({ result: "fail" });
+    printError(req, err);
+    next();
   }
 };
 
 //좋아요 업데이트
-ClickedLike = async (req, res, next) => {
+UpdateLike = async (req, res, next) => {
   try {
     //카운트, 초기값설정, 갱신(누르면),
     const { postId } = req.params; //좋아요를 누르고 싶은 게시물 postId 가져오기
@@ -142,18 +154,19 @@ ClickedLike = async (req, res, next) => {
           { postId: postId, nickname: nickname },
           { $set: { checkLike: eventLike, countNum: countNum - 1 } }
         );
+        const getLike = await Likes.findOne({ postId: postId });
+        const sumlike = getLike.countNum;
+        res.json(likes, sumlike);
       } else {
         const likes = await Likes.findOneAndUpdate(
           { postId: postId, nickname: nickname },
           { $set: { checkLike: eventLike, countNum: countNum + 1 } }
         );
+        const getLike = await Likes.findOne({ postId: postId });
+        const sumlike = getLike.countNum;
+        res.json(likes, sumlike);
       }
     }
-
-    // 좋아요의 총개수 파악하기
-    const getLike = await Likes.findOne({ postId: postId });
-    const sumlike = getLike.countNum;
-    res.json(likes, sumlike);
   } catch (err) {
     res.send({ result: "fail" });
     printError(req, err);
@@ -167,5 +180,6 @@ module.exports = {
   CreateComment,
   GetDetailPosting,
   GetComment,
-  ClickedLike,
+  CreateLike,
+  UpdateLike,
 };
