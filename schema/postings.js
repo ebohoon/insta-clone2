@@ -20,6 +20,7 @@ const PostingsSchema = new Schema({
     required: true,
   },
   Like: [{ type: mongoose.Schema.Types.ObjectId, ref: 'likes' }],
+  Commentss: [{ type: mongoose.Schema.Types.ObjectId, ref: 'comments' }],
 });
 
 // PostingsSchema.virtual("postId").get(function () {

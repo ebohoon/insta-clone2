@@ -1,7 +1,7 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const authUser = require('../middlewares/authMiddleware');
-const multer = require('../middlewares/multer');
+const authUser = require("../middlewares/authMiddleware");
+const multer = require("../middlewares/multer");
 
 const {
   GetMainPosting,
@@ -9,20 +9,21 @@ const {
   GetDetailPosting,
   CreateComment,
   GetComment,
-  ClickedLike,
-} = require('./controller/main');
+  CreateLike,
+  UpdateLike,
+} = require("./controller/main");
 
-router.route('/view').get(authUser, GetMainPosting);
+router.route("/view").get(authUser, GetMainPosting);
 // 게시물 전체 불러오기
 
-router.route('/view/:postId').get(authUser, GetDetailPosting);
+router.route("/view/:postId").get(authUser, GetDetailPosting);
 // 특정게시물 불러오기
 
-router.route('/post').post(authUser, multer, CreatePosting);
+router.route("/post").post(authUser, multer, CreatePosting);
 //게시물 작성
 
 router
-  .route('/comment/:postId')
+  .route("/comment/:postId")
   //댓글 작성
   .post(authUser, CreateComment)
   //댓글 불러오기
@@ -30,6 +31,7 @@ router
 
 router
   //좋아요
-  .route('/like/:postId')
-  .put(authUser, ClickedLike);
+  .route("/like/:postId")
+  .post(authUser, CreateLike)
+  .put(authUser, UpdateLike);
 module.exports = router;
