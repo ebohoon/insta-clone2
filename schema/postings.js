@@ -19,7 +19,9 @@ const PostingsSchema = new Schema({
     type: String,
     required: true,
   },
+  Like: [{ type: mongoose.Schema.Types.ObjectId, ref: 'likes' }],
 });
+
 // PostingsSchema.virtual("postId").get(function () {
 //   return this._id.toHexString()
 // })

@@ -11,7 +11,7 @@ const likesSchema = new Schema({
     required: true,
   },
   countNum: {
-    type: I,
+    type: Number,
     default: 0,
   },
   createdAt: {
