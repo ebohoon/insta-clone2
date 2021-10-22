@@ -1,0 +1,28 @@
+const mongoose = require('mongoose');
+
+const { Schema } = mongoose;
+const likesSchema = new Schema({
+  nickname: {
+    type: String,
+    required: true,
+  },
+  postId: {
+    type: String,
+    required: true,
+  },
+  countNum: {
+    type: I,
+    default: 0,
+  },
+  createdAt: {
+    type: String,
+    required: true,
+  },
+  checkLike: {
+    type: Boolean,
+    required: true,
+    default: false,
+  },
+});
+
+module.exports = mongoose.model('likes', likesSchema);
